@@ -67,7 +67,7 @@ function Heimdall {
   if ($InstallorNOT -eq "Y") {
     # Download Heimdall
     Write-Host "`nDownloading the latest Official Heimdall files"
-    $url = "https://github.com/Y1sak/Heimdall/releases/download/v2.0.2/win-build.zip"
+    $url = "https://github.com/Rev4N1/Heimdall/releases/latest/download/win-build.zip"
     $DownloadDestinationHeimdall = "$PSScriptRoot\heimdall.zip"
     $UnzipDestinationHeimdall = "$PSScriptRoot\heimdall"
     $start_time = Get-Date
@@ -197,7 +197,7 @@ function ADBuserOnly {
 
 function InstallDriver {
   # PROMPT FOR USER for download 
-  ($InstallorNOT) = Read-Host "`nDo you want to install device drivers (Reccomended)[Y/N]?"
+  ($InstallorNOT) = Read-Host "`nDo you want to install device drivers (Recommended)[Y/N]?"
   while ("y", "n" -notcontains $InstallorNOT ) {
     $InstallorNOT = Read-Host "`nPlease enter your response [Y/N]"
   }
