@@ -1,10 +1,10 @@
 :: CHECK GOG, ROCKSTAR, SPOTIFY, DISCORD, WHATSAPP
+::@echo Google Chrome
+::call :COPY "%LocalAppData%\Google"
 @echo off
-TITLE "BackUp Utility"
-mode con: cols=70 lines=10
+TITLE "Backup Utility"
+MODE CON | findstr "9001 3000 120" > NUL 2>&1 && MODE CON lines=10 cols=70
 cd /d "%~dp0"
-CLS
-
 
 set "Dir=%cd%"
 
@@ -24,6 +24,20 @@ rd /s /q "%Dir%\C\Users\%UserName%\Documents\My Pictures" > NUL 2>&1
 @echo Registry File on Desktop
 echo Windows Registry Editor Version 5.00 > "%Dir%\C\Users\%UserName%\Desktop\Registry.reg"
 echo. >> "%Dir%\C\Users\%UserName%\Desktop\Registry.reg"
+
+:: Application Settings
+@echo Discord
+call :COPY "%AppData%\discord\Local Storage"
+call :COPY "%AppData%\discord\domainMigrated"
+call :COPY "%AppData%\discord\Local State"
+call :COPY "%AppData%\discord\settings.json"
+
+@echo OBS-Studio
+call :COPY "%AppData%\obs-studio\basic"
+call :COPY "%AppData%\obs-studio\global.ini"
+
+@echo Spotify
+call :COPY "%AppData%\Spotify\prefs"
 
 :: Game Launchers Configs
 @echo Battle.net
@@ -93,6 +107,9 @@ call :REGISTRY "HKEY_CURRENT_USER\SOFTWARE\BattleBitDevTeam\BattleBit"
 
 @echo Battlefield 4 Remove Crap
 cd "%Dir%\C\Users\%UserName%\Documents\Battlefield 4" && call :CLEAN "twinkle"
+
+@echo Battalion 1994
+call :COPY "%LocalAppData%\Battalion\Saved\Config\WindowsClient"
 
 @echo BioShock
 call :COPY "%AppData%\Bioshock"
@@ -164,6 +181,9 @@ call :COPY "%ProgramData%\Riot Games\Metadata\league_of_legends.live\league_of_l
 call :COPY "%ProgramData%\Riot Games\Metadata\league_of_legends.live\league_of_legends.live.ico"
 call :COPY "%ProgramData%\Riot Games\Metadata\league_of_legends.live\league_of_legends.live.db"
 
+@echo Lethal Company
+call :COPY "%UserProfile%\AppData\LocalLow\ZeekerssRBLX\Lethal Company"
+
 @echo Life Is Strange 2
 call :COPY "%LocalAppData%\Dontnod"
 
@@ -195,6 +215,7 @@ call :COPY "%UserProfile%\AppData\LocalLow\Kinetic Games\Phasmophobia\saveData.t
 @echo Plutonium
 call :COPY "%LocalAppData%\Plutonium\config.json"
 call :COPY "%LocalAppData%\Plutonium\storage\demonware"
+call :COPY "%LocalAppData%\Plutonium\storage\iw5\players"
 call :COPY "%LocalAppData%\Plutonium\storage\t4\players"
 call :COPY "%LocalAppData%\Plutonium\storage\t5\players"
 call :COPY "%LocalAppData%\Plutonium\storage\t6\players"
@@ -217,6 +238,9 @@ call :COPY "%UserProfile%\AppData\LocalLow\id Software\quakelive\home\baseq3"
 
 @echo Rainbow Six Siege
 call :REGISTRY "HKEY_CURRENT_USER\Software\Ubisoft\Rainbow Six - Siege"
+
+@echo Sons Of The Forest
+call :COPY "%UserProfile%\AppData\LocalLow\Endnight\SonsOfTheForest"
 
 @echo Super Animal Royale
 call :REGISTRY "HKEY_CURRENT_USER\Software\Pixile Inc\Super Animal Royale"
@@ -243,29 +267,15 @@ call :COPY "%ProgramData%\Riot Games\Metadata\valorant.live\valorant.live.produc
 call :COPY "%ProgramData%\Riot Games\Metadata\valorant.live\valorant.live.ico"
 call :COPY "%ProgramData%\Riot Games\Metadata\valorant.live\valorant.live.db"
 
-:: Application Settings
-@echo Discord
-call :COPY "%AppData%\discord\Local Storage"
-call :COPY "%AppData%\discord\domainMigrated"
-call :COPY "%AppData%\discord\Local State"
-call :COPY "%AppData%\discord\settings.json"
-
-@echo OBS-Studio
-call :COPY "%AppData%\obs-studio\basic"
-call :COPY "%AppData%\obs-studio\global.ini"
-
-@echo Spotify
-call :COPY "%AppData%\Spotify\prefs"
-
 :: Windows Settings
-@echo QoS Profiles
-call :REGISTRY "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\QoS"
+::@echo QoS Profiles
+::call :REGISTRY "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\QoS"
 
-@echo Fullscreen Settings
-call :REGISTRY "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+::@echo Fullscreen Settings
+::call :REGISTRY "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
 
-@echo GPU Preferences
-call :REGISTRY "HKEY_CURRENT_USER\SOFTWARE\Microsoft\cdectX\UserGpuPreferences"
+::@echo GPU Preferences
+::call :REGISTRY "HKEY_CURRENT_USER\SOFTWARE\Microsoft\cdectX\UserGpuPreferences"
 
 @echo Remove Not Necessary Files
 cd "%Dir%\C"
