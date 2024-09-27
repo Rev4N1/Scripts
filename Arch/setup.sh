@@ -36,16 +36,38 @@ install_yay() {
     fi
 }
 
-# Function to install KDE and KDE software
-install_kde() {
-    echo "Installing KDE Plasma and applications..."
-    sudo pacman -S --needed --noconfirm xorg sddm
-    sudo systemctl enable sddm
+install_amd() {
+    echo "Installing AMD GPU drivers and tools"
+    # Install AMD drivers and tools
+    sudo pacman -S --noconfirm mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon vulkan-icd-loader lib32-vulkan-icd-loader libva-mesa-driver
+    }
 
-    sudo pacman -S --noconfirm plasma-desktop dolphin konsole systemsettings plasma-pa plasma-nm kscreen kde-gtk-config breeze-gtk powerdevil sddm-kcm kwalletmanager \
-        kio-admin bluedevil
+install_nvidia() {
+    echo "Installing Nvidia GPU drivers"
+    # Install Nvidia drivers and tools
+    sudo pacman -S --noconfirm nvidia nvidia-utils lib32-nvidia-utils nvidia-settings opencl-nvidia libva-nvidia-driver
+}
 
-    sudo systemctl enable NetworkManager
+# Main installation
+main_installation() {
+    echo "Starting the main installation. This may take some time."
+
+    # Enable TRIM for SSDs
+    sudo systemctl enable fstrim.timer
+
+    # Install bluetooth packages
+    sudo pacman -S --noconfirm bluez bluez-utils
+    sudo systemctl enable bluetooth.service
+    
+	# CPU Power Management
+	sudo pacman -S --noconfirm power-profiles-daemon
+	systemctl enable power-profiles-daemon
+	
+	# PowerTop
+	echo -e "[Unit]\nDescription=Powertop tunings\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/powertop --auto-tune\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/powertop.service
+	systemctl enable powertop.service
+	
+    echo "Main installation completed."
 }
 
 # Main program
@@ -68,11 +90,32 @@ enable_multilib
 sudo pacman -Syyu --noconfirm
 install_yay
 
-# desktop environment
-install_kde
+# Ask about AMD installation
+echo -e "${YELLOW}Do you want to install AMD GPU drivers? (y/n)${NC}"
+read -r amd_response
+if [[ "$amd_response" =~ ^[Yy]$ ]]; then
+    install_amd
+else
+    echo -e "${RED}AMD GPU installation skipped.${NC}"
+fi
 
-# Enable TRIM for SSDs
-sudo systemctl enable fstrim.timer
+# Ask about Nvidia installation
+echo -e "${YELLOW}Do you want to install Nvidia GPU drivers? (y/n)${NC}"
+read -r nvidia_response
+if [[ "$nvidia_response" =~ ^[Yy]$ ]]; then
+    install_nvidia
+else
+    echo -e "${RED}Nvidia GPU installation skipped.${NC}"
+fi
+
+# Ask about Main installation
+echo -e "${YELLOW}Do you want to start the main installation for laptop software? (y/n)${NC}"
+read -r main_response
+if [[ "$main_response" =~ ^[Yy]$ ]]; then
+    main_installation
+else
+    echo -e "${RED}Main installation skipped.${NC}"
+fi
 
 echo -e "${YELLOW}Process completed.${NC}"
 
