@@ -58,15 +58,19 @@ main_installation() {
     # Install bluetooth packages
     sudo pacman -S --noconfirm bluez bluez-utils
     sudo systemctl enable bluetooth.service
-    
-	# CPU Power Management
-	sudo pacman -S --noconfirm power-profiles-daemon
-	systemctl enable power-profiles-daemon
-	
-	# PowerTop
-	echo -e "[Unit]\nDescription=Powertop tunings\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/powertop --auto-tune\n\n[Install]\nWantedBy=multi-user.target" > /etc/systemd/system/powertop.service
-	systemctl enable powertop.service
-	
+
+    # Install alsa package
+    sudo pacman -S --noconfirm alsa-utils
+
+    # CPU Power Management
+    sudo pacman -S --noconfirm power-profiles-daemon
+    sudo systemctl enable power-profiles-daemon
+
+    # PowerTop
+    sudo pacman -S --noconfirm powertop
+    echo -e "[Unit]\nDescription=Powertop tunings\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/powertop --auto-tune\n\n[Install]\nWantedBy=multi-user.target" | sudo tee /etc/systemd/system/powertop.service &>/dev/null
+    sudo systemctl enable powertop.service
+
     echo "Main installation completed."
 }
 
