@@ -20,6 +20,9 @@ set "PTDL=dl.google.com/android/repository/platform-tools-latest-windows.zip"
 set "PTFile=platform-tools.zip"
 set "HDDL=github.com/Rev4N1/Heimdall/releases/latest/download/win-build.zip"
 set "HDFile=heimdall.zip"
+REM https://github.com/pbatard/libwdi/releases
+set "ZADL=github.com/pbatard/libwdi/releases/download/v1.5.1/zadig-2.9.exe"
+set "ZAFile=zadig.exe"
 REM https://developer.android.com/studio/run/win-usb
 set "USBDL=dl.google.com/android/repository/usb_driver_r13-windows.zip"
 set "USBFile=usb_driver.zip"
@@ -35,6 +38,7 @@ rd /s /q "%temp%\platform-tools" > NUL 2>&1
 del /f /q "%temp%\%HDFile%" > NUL 2>&1
 curl -fsSL "%HDDL%" -o "%temp%\%HDFile%" -O > NUL 2>&1
 "%ProgramFiles%\7-Zip\7z.exe" x "%temp%\%HDFile%" -o"%temp%\platform-tools" > NUL 2>&1
+curl -fsSL "%ZADL%" -o "%temp%\platform-tools\%ZAFile%" -O > NUL 2>&1
 
 @echo Install Platform Tools
 rd /s /q "%SystemDrive%\adb" > NUL 2>&1
